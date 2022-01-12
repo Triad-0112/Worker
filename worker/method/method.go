@@ -8,7 +8,6 @@ import (
 	"github.com/Triad-0112/Worker/color"
 	"github.com/Triad-0112/Worker/worker"
 )
-
 type Pool struct {
 	Jobs       []*Jobs
 	TWorker    int
@@ -19,7 +18,7 @@ type Jobs struct {
 	year int
 	dir  string
 }
-
+var WJobs = []*Jobs{}
 func (p *Pool) Run() {
 	for i := 0; i < p.TWorker; i++ {
 		go p.Work(i)

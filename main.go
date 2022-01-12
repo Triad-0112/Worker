@@ -16,7 +16,7 @@ func main() {
 	from := flag.Int("from", 1993, "Range start to Fetch and Create its file")
 	until := flag.Int("until", 2014, "Range end to Fetch and Create its file")
 	flag.Parse()
-	jobs := []*Jobs{}
+	jobs := wmethod.WJobs
 	for i := *from; i <= *until; i++ {
 		jobs = append(jobs, wmethod.NewJobs(i, *dir))
 	}

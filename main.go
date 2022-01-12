@@ -1,45 +1,15 @@
 package main
 
 import (
-	"encoding/csv"
 	"flag"
 	"fmt"
-	"log"
-	"os"
-	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
+	
 	"github.com/Triad-0112/Worker/color"
 	"github.com/Triad-0112/Worker/worker"
 )
-
-const baseurl = "https://data.gov.sg/api/action/datastore_search?resource_id=eb8b932c-503c-41e7-b513-114cffbe2338&q="
-
-//Data TYPE DONT CHANGE
-type Graduate struct {
-	Success bool   `json:"success"`
-	Result  Result `json:"result"`
-}
-
-type Result struct {
-	Resource_id string    `json:"resource_id"`
-	Fields      []Fields  `json:"fields"`
-	Records     []Records `json:"records"`
-}
-
-type Fields struct {
-	Type string `json:"type"`
-	Id   string `json:"id"`
-}
-
-type Records struct {
-	Ide    int    `json:"_id"`
-	Sex    string `json:"sex"`
-	No     string `json:"no_of_graduates"`
-	Course string `json:"type_of_course"`
-	Year   string `json:"year"`
-}
 
 //WORKER POOL TEST
 type WorkTool interface {
@@ -87,7 +57,7 @@ func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	defer wg.Done()
 	defer fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished working on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
 	fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to work on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
-	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", worker.Fetcher(j.year, id), id) //THIS
+	worker.CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", worker.Fetcher(j.year, id), id) //THIS
 }
 func NewJobs(year int, dir string) *Jobs {
 	return &Jobs{
@@ -97,26 +67,6 @@ func NewJobs(year int, dir string) *Jobs {
 }
 
 //WORKER WORK
-
-func CreateFile(dir *string, filename string, a [][]string, id int) {
-	defer fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Finished Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
-	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
-	filepath, err := filepath.Abs(*dir + filename)
-	if err != nil {
-		log.Fatalln("Invalid path")
-	}
-	f, err := os.Create(filepath)
-	if err != nil {
-
-		log.Fatalln("failed to open file", err)
-	}
-	//value := <-records
-	w := csv.NewWriter(f)
-	err = w.WriteAll(a) // calls Flush internally
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 func main() {
 	totalworker := flag.Int("concurrent_limit", 2, "Input total worker")

@@ -1,5 +1,7 @@
 package wmethod
-import 
+import (
+	"github.com/Triad-0112/Worker/worker"
+)
 
 func (p *Pool) Run() {
 	for i := 0; i < p.TWorker; i++ {

@@ -13,8 +13,6 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	"github.com/Triad-0112/Worker"
-	"github.com/fatih/color"
 )
 
 const baseurl = "https://data.gov.sg/api/action/datastore_search?resource_id=eb8b932c-503c-41e7-b513-114cffbe2338&q="
@@ -43,14 +41,6 @@ type Records struct {
 	Course string `json:"type_of_course"`
 	Year   string `json:"year"`
 }
-
-var textcolor = color.New(color.FgHiWhite, color.Bold).SprintfFunc()
-var workercolor = color.New(color.FgHiCyan, color.Bold).SprintfFunc()
-var directorycolor = color.New(color.FgHiYellow, color.Bold, color.Italic).SprintfFunc()
-var filenamecolor = color.New(color.FgHiGreen, color.BlinkRapid, color.Bold).SprintfFunc()
-var timecolor = color.New(color.FgHiMagenta, color.Bold).SprintfFunc()
-var notificationcolor = color.New(color.FgHiRed, color.Bold).SprintfFunc()
-var now = time.Now()
 
 //WORKER POOL TEST
 type WorkTool interface {
@@ -86,7 +76,8 @@ func (p *Pool) Run() {
 	p.wg.Wait()
 }
 func (p *Pool) Work(id int) {
-	defer fmt.Printf("%s\n\n", notificationcolor("Worker %d Rest...", id+1))
+	defer fmt.Printf("%s\n\n", )
+	//notificationcolor("Worker %d Rest...", id+1)
 	fmt.Printf("%s\n\n", notificationcolor("Worker %d DEPLOYED to Work Site", id+1))
 	//fmt.Printf("%s\n\n", notificationcolor("Worker %d Deployed to Working Site\n\n", id+1))
 	for jobs := range p.JobChannel {

@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
-	"https://github.com/Triad-0112/Worker/color"
+	"github.com/Triad-0112/Worker/color"
 )
 
 const baseurl = "https://data.gov.sg/api/action/datastore_search?resource_id=eb8b932c-503c-41e7-b513-114cffbe2338&q="
@@ -87,8 +87,8 @@ func (p *Pool) Work(id int) {
 }
 func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	defer wg.Done()
-	defer fmt.Printf("%s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Finished working on data-%s", filenamecolor("%d.csv", j.year)))
-	fmt.Printf("%s %s\n\n", colortext.workercolor("[Worker %d] :", id+1), textcolor("Starting to work on data-%s", filenamecolor("%d.csv", j.year)))
+	defer fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished working on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
+	fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to work on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
 	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", fetcher(j.year, id), id) //THIS
 }
 func NewJobs(year int, dir string) *Jobs {
@@ -105,8 +105,8 @@ func fetcher(year int, id int) [][]string {
 			fmt.Println(err)
 		}
 	}()
-	defer fmt.Printf("%s %s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Finished collecting data of %s", filenamecolor("%d", year)), textcolor("from API"))
-	fmt.Printf("%s %s", workercolor("[Worker %d] :", id+1), textcolor("Starting to fetch data of %s\n\n", filenamecolor("%d.csv", year)))
+	defer fmt.Printf("%s %s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished collecting data of %s", colortext.Filenamecolor("%d", year)), colortext.Textcolor("from API"))
+	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to fetch data of %s\n\n", colortext.Filenamecolor("%d.csv", year)))
 	url := baseurl + strconv.Itoa(year)
 	m := make(map[string][][]string)
 	spaceClient := http.Client{
@@ -145,8 +145,8 @@ func fetcher(year int, id int) [][]string {
 	return m[convert]
 }
 func CreateFile(dir *string, filename string, a [][]string, id int) {
-	defer fmt.Printf("%s %s", workercolor("[Worker %d]:", id+1), textcolor("Finished Creating %s %s %s\n\n", filenamecolor("%s", filename), textcolor("at"), directorycolor("%s", *dir)))
-	fmt.Printf("%s %s", workercolor("[Worker %d]:", id+1), textcolor("Creating %s %s %s\n\n", filenamecolor("%s", filename), textcolor("at"), directorycolor("%s", *dir)))
+	defer fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Finished Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
+	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
 	filepath, err := filepath.Abs(*dir + filename)
 	if err != nil {
 		log.Fatalln("Invalid path")
@@ -175,7 +175,7 @@ func main() {
 	}
 	p := NewPool(jobs, *totalworker)
 	p.Run()
-	fmt.Printf("%s", timecolor("%s", time.Since(now)))
+	fmt.Printf("%s", colortext.Timecolor("%s", time.Since(colortext.Now)))
 }
 
 // EFFECTIVELY TIME : 1s to work

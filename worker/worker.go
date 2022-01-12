@@ -17,8 +17,8 @@ func fetcher(year int, id int) [][]string {
 			fmt.Println(err)
 		}
 	}()
-	defer fmt.Printf("%s %s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.colortext.colortext.Textcolor("Finished collecting data of %s", colortext.Filenamecolor("%d", year)), colortext.colortext.Textcolor("from API"))
-	fmt.Printf("%s %s", workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to fetch data of %s\n\n", filenamecolor("%d.csv", year)))
+	defer fmt.Printf("%s %s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished collecting data of %s", colortext.Filenamecolor("%d", year)), colortext.Textcolor("from API"))
+	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to fetch data of %s\n\n", colortext.Filenamecolor("%d.csv", year)))
 	url := baseurl + strconv.Itoa(year)
 	m := make(map[string][][]string)
 	spaceClient := http.Client{

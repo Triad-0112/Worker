@@ -76,7 +76,7 @@ func (p *Pool) Run() {
 	p.wg.Wait()
 }
 func (p *Pool) Work(id int) {
-	defer fmt.Printf("%s\n\n", )
+	defer fmt.Printf("%s\n\n")
 	//notificationcolor("Worker %d Rest...", id+1)
 	fmt.Printf("%s\n\n", notificationcolor("Worker %d DEPLOYED to Work Site", id+1))
 	//fmt.Printf("%s\n\n", notificationcolor("Worker %d Deployed to Working Site\n\n", id+1))

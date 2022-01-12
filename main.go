@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
-
+	"github.com/Triad-0112/Worker"
 	"github.com/fatih/color"
 )
 
@@ -97,7 +97,7 @@ func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	defer wg.Done()
 	defer fmt.Printf("%s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Finished working on data-%s", filenamecolor("%d.csv", j.year)))
 	fmt.Printf("%s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Starting to work on data-%s", filenamecolor("%d.csv", j.year)))
-	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", fetcher(j.year, id), id)
+	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", fetcher(j.year, id), id) //THIS
 }
 func NewJobs(year int, dir string) *Jobs {
 	return &Jobs{

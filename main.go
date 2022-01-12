@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 	"github.com/Triad-0112/Worker/color"
+	"github.com/Triad-0112/Worker/worker"
 )
 
 const baseurl = "https://data.gov.sg/api/action/datastore_search?resource_id=eb8b932c-503c-41e7-b513-114cffbe2338&q="

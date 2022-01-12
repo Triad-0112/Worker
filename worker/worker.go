@@ -11,7 +11,7 @@ import (
 	"github.com/Triad-0112/Worker/color"
 )
 
-func fetcher(year int, id int) [][]string {
+func Fetcher(year int, id int) [][]string {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)

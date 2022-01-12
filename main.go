@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"sync"
 	"time"
+	"https://github.com/Triad-0112/Worker/color"
 )
 
 const baseurl = "https://data.gov.sg/api/action/datastore_search?resource_id=eb8b932c-503c-41e7-b513-114cffbe2338&q="
@@ -76,9 +77,9 @@ func (p *Pool) Run() {
 	p.wg.Wait()
 }
 func (p *Pool) Work(id int) {
-	defer fmt.Printf("%s\n\n")
+	defer fmt.Printf("%s\n\n", colortext.Notificationcolor("Worker %d DEPLOYED to Work Site", id+1))
 	//notificationcolor("Worker %d Rest...", id+1)
-	fmt.Printf("%s\n\n", notificationcolor("Worker %d DEPLOYED to Work Site", id+1))
+	fmt.Printf("%s\n\n", colortext.Notificationcolor("Worker %d DEPLOYED to Work Site", id+1))
 	//fmt.Printf("%s\n\n", notificationcolor("Worker %d Deployed to Working Site\n\n", id+1))
 	for jobs := range p.JobChannel {
 		jobs.Run(&p.wg, id)
@@ -87,7 +88,7 @@ func (p *Pool) Work(id int) {
 func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	defer wg.Done()
 	defer fmt.Printf("%s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Finished working on data-%s", filenamecolor("%d.csv", j.year)))
-	fmt.Printf("%s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Starting to work on data-%s", filenamecolor("%d.csv", j.year)))
+	fmt.Printf("%s %s\n\n", colortext.workercolor("[Worker %d] :", id+1), textcolor("Starting to work on data-%s", filenamecolor("%d.csv", j.year)))
 	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", fetcher(j.year, id), id) //THIS
 }
 func NewJobs(year int, dir string) *Jobs {

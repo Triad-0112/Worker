@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"github.com/"
+	"github.com/Triad-0112/Worker/color"
 )
 
 func fetcher(year int, id int) [][]string {
@@ -17,8 +17,8 @@ func fetcher(year int, id int) [][]string {
 			fmt.Println(err)
 		}
 	}()
-	defer fmt.Printf("%s %s %s\n\n", workercolor("[Worker %d] :", id+1), textcolor("Finished collecting data of %s", filenamecolor("%d", year)), textcolor("from API"))
-	fmt.Printf("%s %s", workercolor("[Worker %d] :", id+1), textcolor("Starting to fetch data of %s\n\n", filenamecolor("%d.csv", year)))
+	defer fmt.Printf("%s %s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.colortext.colortext.Textcolor("Finished collecting data of %s", colortext.Filenamecolor("%d", year)), colortext.colortext.Textcolor("from API"))
+	fmt.Printf("%s %s", workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to fetch data of %s\n\n", filenamecolor("%d.csv", year)))
 	url := baseurl + strconv.Itoa(year)
 	m := make(map[string][][]string)
 	spaceClient := http.Client{

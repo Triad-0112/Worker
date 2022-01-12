@@ -2,12 +2,9 @@ package main
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -90,7 +87,7 @@ func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	defer wg.Done()
 	defer fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished working on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
 	fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to work on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
-	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", fetcher(j.year, id), id) //THIS
+	CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", worker.Fetcher(j.year, id), id) //THIS
 }
 func NewJobs(year int, dir string) *Jobs {
 	return &Jobs{
@@ -100,51 +97,7 @@ func NewJobs(year int, dir string) *Jobs {
 }
 
 //WORKER WORK
-func fetcher(year int, id int) [][]string {
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println(err)
-		}
-	}()
-	defer fmt.Printf("%s %s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Finished collecting data of %s", colortext.Filenamecolor("%d", year)), colortext.Textcolor("from API"))
-	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to fetch data of %s\n\n", colortext.Filenamecolor("%d.csv", year)))
-	url := baseurl + strconv.Itoa(year)
-	m := make(map[string][][]string)
-	spaceClient := http.Client{
-		Timeout: time.Second * 2,
-	}
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	response, getErr := spaceClient.Do(request)
-	if getErr != nil {
-		log.Fatal(getErr)
-	}
-	if response.Body != nil {
-		defer response.Body.Close()
-	}
-	body, readErr := ioutil.ReadAll(response.Body)
-	if readErr != nil {
-		log.Fatal(readErr)
-	}
-	record := Graduate{}
-	jsonErr := json.Unmarshal(body, &record)
-	if jsonErr != nil {
-		log.Fatal(jsonErr)
-	}
-	convert := strconv.Itoa(year)
-	for i := range record.Result.Records {
-		temp := []string{
-			strconv.Itoa(record.Result.Records[i].Ide),
-			record.Result.Records[i].Sex,
-			record.Result.Records[i].Course,
-			record.Result.Records[i].Year,
-		}
-		m[convert] = append(m[convert], temp)
-	}
-	return m[convert]
-}
+
 func CreateFile(dir *string, filename string, a [][]string, id int) {
 	defer fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Finished Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
 	fmt.Printf("%s %s", colortext.Workercolor("[Worker %d]:", id+1), colortext.Textcolor("Creating %s %s %s\n\n", colortext.Filenamecolor("%s", filename), colortext.Textcolor("at"), colortext.Directorycolor("%s", *dir)))
@@ -164,6 +117,7 @@ func CreateFile(dir *string, filename string, a [][]string, id int) {
 		log.Fatal(err)
 	}
 }
+
 func main() {
 	totalworker := flag.Int("concurrent_limit", 2, "Input total worker")
 	dir := flag.String("output", "D:/Test/", "Destination Output file")

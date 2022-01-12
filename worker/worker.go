@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 	"github.com/Triad-0112/Worker/color"
+	"github.com/Triad-0112/Worker/datapi"
 )
 
 func Fetcher(year int, id int) [][]string {

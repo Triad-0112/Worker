@@ -5,9 +5,24 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/Triad-0112/Worker/color"
+	colortext "github.com/Triad-0112/Worker/color"
 	"github.com/Triad-0112/Worker/worker"
 )
+
+type KindWorkerMessage interface {
+	makeDeployMessage()
+	makeRestMessage()
+	makeWorkingMessage()
+	makeDoneWorkingMessage()
+}
+
+type WorkerMessage interface {
+	setMessage(string)
+	getMessage() string
+	setWorker(int)
+	getWorker() int
+}
+
 type Pool struct {
 	Jobs       []*Jobs
 	TWorker    int
@@ -18,7 +33,9 @@ type Jobs struct {
 	year int
 	dir  string
 }
+
 var WJobs = []*Jobs{}
+
 func (p *Pool) Run() {
 	for i := 0; i < p.TWorker; i++ {
 		go p.Work(i)
@@ -30,6 +47,7 @@ func (p *Pool) Run() {
 	close(p.JobChannel)
 	p.wg.Wait()
 }
+
 func NewPool(jobs []*Jobs, tworker int) *Pool {
 	return &Pool{
 		Jobs:       jobs,
@@ -53,6 +71,7 @@ func (j *Jobs) Run(wg *sync.WaitGroup, id int) {
 	fmt.Printf("%s %s\n\n", colortext.Workercolor("[Worker %d] :", id+1), colortext.Textcolor("Starting to work on data-%s", colortext.Filenamecolor("%d.csv", j.year)))
 	worker.CreateFile(&j.dir, strconv.Itoa(j.year)+".csv", worker.Fetcher(j.year, id), id) //THIS
 }
+
 func NewJobs(year int, dir string) *Jobs {
 	return &Jobs{
 		year: year,
